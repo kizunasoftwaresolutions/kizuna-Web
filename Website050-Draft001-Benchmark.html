@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kizuna Software Solutions | Scale & Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .bg-mesh { background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(263,45%,20%,0.3) 0, transparent 50%); }
+        .bg-grid { background-size: 40px 40px; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); }
+        html { scroll-behavior: smooth; }
+        .bento-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .bento-card:hover { transform: translateY(-5px); background: rgba(30, 41, 59, 0.6); }
+        
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link.active { color: white; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: #6366f1; transition: width 0.3s ease; }
+        .nav-link.active::after { width: 100%; }
+
+        #modal-overlay { display: none; }
+        #modal-overlay.active { display: flex; }
+
+        /* Brand Glow Styles */
+        .glow-pytorch { box-shadow: 0 0 15px -5px rgba(239, 68, 68, 0.4); }
+        .glow-tf { box-shadow: 0 0 15px -5px rgba(249, 115, 22, 0.4); }
+        .glow-opencv { box-shadow: 0 0 15px -5px rgba(74, 222, 128, 0.4); }
+        .glow-ai { box-shadow: 0 0 15px -5px rgba(129, 140, 248, 0.4); }
+        .glow-nlp { box-shadow: 0 0 15px -5px rgba(52, 211, 153, 0.4); }
+        .glow-data { box-shadow: 0 0 15px -5px rgba(34, 211, 238, 0.4); }
+        .glow-genai { box-shadow: 0 0 15px -5px rgba(236, 72, 153, 0.4); }
+        .glow-aws { box-shadow: 0 0 15px -5px rgba(251, 146, 60, 0.4); }
+        .glow-azure { box-shadow: 0 0 15px -5px rgba(59, 130, 246, 0.4); }
+        .glow-gcp { box-shadow: 0 0 15px -5px rgba(250, 204, 21, 0.4); }
+        .glow-snowflake { box-shadow: 0 0 15px -5px rgba(125, 211, 252, 0.4); }
+        .glow-sys { box-shadow: 0 0 15px -5px rgba(226, 232, 240, 0.2); }
+        .glow-robot { box-shadow: 0 0 15px -5px rgba(192, 132, 252, 0.4); }
+
+        /* New Visual HUD Animations */
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        .scan-line { position: absolute; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #10b981, transparent); animation: scan 3s linear infinite; pointer-events: none; opacity: 0.3; }
+        
+        @keyframes pulse-ai { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.4; } }
+        .ai-pulse-dot { position: absolute; width: 4px; height: 4px; background: #ec4899; border-radius: 50%; filter: blur(1px); animation: pulse-ai 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-white antialiased bg-mesh selection:bg-indigo-500/30">
+
+    <div id="modal-overlay" class="fixed inset-0 z-[100] items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md">
+        <div class="bg-slate-900 border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative shadow-2xl">
+            <button onclick="toggleModal()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition">✕</button>
+            <h3 class="text-3xl font-bold">Initialize Project</h3>
+            <p class="text-slate-400 mt-2 text-sm">Review your configuration and secure your engineering slot.</p>
+            <div class="mt-8 p-6 bg-slate-800/50 rounded-2xl border border-white/5">
+                <div class="flex justify-between text-xs font-mono uppercase tracking-widest text-indigo-400">
+                    <span>Domain: <span id="modal-domain">Cloud</span></span>
+                    <span>Complexity: <span id="modal-comp">5</span>/10</span>
+                </div>
+                <div class="mt-4 text-3xl font-black" id="modal-price-display">$12,500</div>
+                <div class="mt-2 text-[10px] text-slate-500 uppercase font-bold tracking-tighter italic">Standard window: 4-12 weeks</div>
+            </div>
+            <form class="mt-8 space-y-4">
+                <input type="email" placeholder="Professional Email" class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
+                <button type="button" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">Submit Initiation Request</button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="flex justify-between items-center px-6 md:px-10 py-6 border-b border-white/10 glass sticky top-0 z-50">
+        <div class="text-xl md:text-2xl font-black tracking-[0.2em]">KIZUNA <span class="text-indigo-500 font-light text-sm uppercase tracking-normal">Software Solutions</span></div>
+        <div class="hidden lg:flex gap-8 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <a href="#cloud" class="nav-link hover:text-white transition">Cloud</a>
+            <a href="#ai" class="nav-link hover:text-white transition">AI & ML</a>
+            <a href="#robotics" class="nav-link hover:text-white transition">Robotics</a>
+            <a href="#web" class="nav-link hover:text-white transition">Web</a>
+            <a href="#mobile" class="nav-link hover:text-white transition">Mobile</a>
+            <a href="#lab" class="nav-link hover:text-white transition">Project Lab</a>
+        </div>
+        <button onclick="toggleModal()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-full text-xs font-bold transition-all">Contact Expert</button>
+    </nav>
+
+    <section class="relative pt-24 pb-20 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <span class="px-4 py-1.5 rounded-full border border-indigo-500/30 text-indigo-400 text-[10px] font-bold uppercase tracking-[0.3em] bg-indigo-500/5">Kizuna Software Solutions • 2026</span>
+            <h1 class="mt-8 text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent">Engineered for <br/> Absolute Scale.</h1>
+            <p class="mt-8 text-slate-400 text-lg max-w-2xl mx-auto font-light tracking-wide">Architecting the digital backbone for the world's most ambitious enterprises.</p>
+        </div>
+    </section>
+
+    <div class="bg-grid">
+        <div class="max-w-7xl mx-auto px-6 space-y-16 pb-12 pt-10">
+            <section id="cloud" class="space-y-6 pt-12">
+                <span class="text-indigo-500 font-mono text-xs tracking-widest uppercase block ml-2">01. Cloud Infrastructure</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 p-10 md:p-14 rounded-[2.5rem] bg-slate-900/60 border border-white/5 bento-card">
+                        <h3 class="text-4xl font-bold">Cloud Services</h3>
+                        <p class="text-slate-400 mt-4 text-lg">Deploy and manage robust cloud infrastructure with customized on-premises solutions integrated with AI engines.</p>
+                        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-semibold text-slate-300">
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]"></div> Cloud Architecture Design</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]"></div> On-premises Cloud Deployment</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]"></div> AI Engine Integration</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]"></div> Cloud Migration Services</div>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex flex-col justify-center items-center p-8 rounded-[2.5rem] bg-indigo-600/5 border border-indigo-500/10">
+                        <svg class="w-12 h-12 text-indigo-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ai" class="space-y-6 pt-12">
+                <span class="text-pink-500 font-mono text-xs tracking-widest uppercase block ml-2">02. Intelligence Systems</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="hidden md:flex flex-col justify-center items-center p-8 rounded-[2.5rem] bg-pink-600/5 border border-pink-500/10 relative overflow-hidden">
+                        <div class="ai-pulse-dot" style="top:20%; left:30%"></div>
+                        <div class="ai-pulse-dot" style="top:50%; left:70%; animation-delay: 0.5s"></div>
+                        <div class="ai-pulse-dot" style="top:80%; left:40%; animation-delay: 1s"></div>
+                        <svg class="w-12 h-12 text-pink-500/40 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <div class="absolute bottom-4 left-4 font-mono text-[8px] text-pink-500/30">NEURAL_INFERENCE: ACTIVE</div>
+                    </div>
+                    <div class="md:col-span-2 p-10 md:p-14 rounded-[2.5rem] bg-slate-900/60 border border-white/5 bento-card">
+                        <h3 class="text-4xl font-bold">AI & Machine Learning</h3>
+                        <p class="text-slate-400 mt-4 text-lg">Deploying state-of-the-art DL and Generative models to solve industrial challenges.</p>
+                        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
+                            <div><h4 class="text-pink-500 text-xs font-black uppercase tracking-widest mb-1">Agentic AI</h4><p class="text-slate-300 text-sm">Autonomous Agent Workflows</p></div>
+                            <div><h4 class="text-pink-500 text-xs font-black uppercase tracking-widest mb-1">YOLOv5 / OpenCV</h4><p class="text-slate-300 text-sm">Advanced Computer Vision</p></div>
+                            <div><h4 class="text-pink-500 text-xs font-black uppercase tracking-widest mb-1">PyTorch & TensorFlow</h4><p class="text-slate-300 text-sm">Deep Learning Pipelines</p></div>
+                            <div><h4 class="text-pink-500 text-xs font-black uppercase tracking-widest mb-1">Generative AI</h4><p class="text-slate-300 text-sm">Custom LLM Fine-tuning</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="robotics" class="space-y-6 pt-12">
+                <span class="text-emerald-500 font-mono text-xs tracking-widest uppercase block ml-2">03. Robotics & Systems</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 p-10 md:p-14 rounded-[2.5rem] bg-slate-900/60 border border-white/5 bento-card overflow-hidden">
+                        <div class="scan-line"></div>
+                        <h3 class="text-4xl font-bold">Robot Operating System</h3>
+                        <p class="text-slate-400 mt-4 text-lg">Building the software layer for hardware: ROS, SLAM, and high-performance C++ systems.</p>
+                        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-semibold text-slate-300">
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]"></div> SLAM Navigation</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]"></div> Embedded Systems (C++)</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]"></div> ROS 1 / ROS 2 Development</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]"></div> Computer Systems Architecture</div>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex flex-col justify-center items-center p-8 rounded-[2.5rem] bg-emerald-600/5 border border-emerald-500/10 relative">
+                        <svg class="w-12 h-12 text-emerald-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        <div class="absolute top-4 right-4 font-mono text-[8px] text-emerald-500/30 uppercase tracking-tighter">Lidar_Stream: 30Hz</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="web" class="space-y-6 pt-12">
+                <span class="text-cyan-500 font-mono text-xs tracking-widest uppercase block ml-2">04. Digital Interfaces</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="hidden md:flex flex-col justify-center items-center p-8 rounded-[2.5rem] bg-cyan-600/5 border border-cyan-500/10">
+                        <svg class="w-12 h-12 text-cyan-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9"></path></svg>
+                    </div>
+                    <div class="md:col-span-2 p-10 md:p-14 rounded-[2.5rem] bg-slate-900/60 border border-white/5 bento-card">
+                        <h3 class="text-4xl font-bold">Web Applications</h3>
+                        <p class="text-slate-400 mt-4 text-lg">Build powerful, scalable web applications tailored to your business requirements using modern frameworks.</p>
+                        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-semibold text-slate-300">
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]"></div> Custom React/Next.js dev</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]"></div> Progressive Web Apps (PWA)</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]"></div> Enterprise web portals</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]"></div> Real-time streaming apps</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mobile" class="space-y-6 pt-12">
+                <span class="text-violet-500 font-mono text-xs tracking-widest uppercase block ml-2">05. Ecosystem</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 p-10 md:p-14 rounded-[2.5rem] bg-slate-900/60 border border-white/5 bento-card">
+                        <h3 class="text-4xl font-bold">Mobile Apps</h3>
+                        <p class="text-slate-400 mt-4 text-lg">Create stunning native and cross-platform mobile applications for Android and iOS with seamless UX.</p>
+                        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-semibold text-slate-300">
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-violet-500 rounded-full shadow-[0_0_8px_#8b5cf6]"></div> Native Swift & Kotlin</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-violet-500 rounded-full shadow-[0_0_8px_#8b5cf6]"></div> Flutter / React Native</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-violet-500 rounded-full shadow-[0_0_8px_#8b5cf6]"></div> Offline-first capability</div>
+                            <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-violet-500 rounded-full shadow-[0_0_8px_#8b5cf6]"></div> Global store deployment</div>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex flex-col justify-center items-center p-8 rounded-[2.5rem] bg-violet-600/5 border border-violet-500/10">
+                        <svg class="w-12 h-12 text-violet-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="mt-24 pt-12 text-center">
+            <h2 class="text-5xl md:text-6xl font-black tracking-tighter">Technical Arsenal</h2>
+            <p class="text-indigo-400 font-mono text-[10px] tracking-[0.4em] uppercase mt-4">The Stack That Scales.</p>
+        </section>
+
+        <section class="py-24 border-y border-white/5 bg-slate-900/10 overflow-hidden">
+            <div class="relative flex overflow-x-hidden">
+                <div class="animate-marquee whitespace-nowrap flex">
+                    <div class="flex gap-6 pr-6">
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-pytorch"><span class="text-red-500 font-black text-xl">PyTorch</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Deep Learning</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-tf"><span class="text-orange-500 font-black text-xl">TensorFlow</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Machine Learning</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-opencv"><span class="text-green-400 font-black text-xl">OpenCV</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Computer Vision</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-ai"><span class="text-indigo-400 font-black text-xl">ML / DL</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Neural Networks</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-nlp"><span class="text-emerald-400 font-black text-xl">LLM / NLP</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Language Models</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-data"><span class="text-cyan-400 font-black text-xl">Data Science</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Analytics</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-genai"><span class="text-pink-500 font-black text-xl">Generative AI</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Intelligence</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-aws"><span class="text-orange-400 font-black text-xl">AWS</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Cloud Infrastructure</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-azure"><span class="text-blue-500 font-black text-xl">Azure</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Cloud Services</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-gcp"><span class="text-yellow-400 font-black text-xl">GCP</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Compute Engine</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-snowflake"><span class="text-sky-300 font-black text-xl">Snowflake</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Data Warehouse</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-sys"><span class="text-slate-200 font-black text-xl">Computer Systems</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Low-Level Dev</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-robot"><span class="text-purple-400 font-black text-xl">SLAM / IoT</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Robotics & Sensing</span></div>
+                    </div>
+                    <div class="flex gap-6 pr-6">
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-pytorch"><span class="text-red-500 font-black text-xl">PyTorch</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Deep Learning</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-tf"><span class="text-orange-500 font-black text-xl">TensorFlow</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Machine Learning</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-opencv"><span class="text-green-400 font-black text-xl">OpenCV</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Computer Vision</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-ai"><span class="text-indigo-400 font-black text-xl">ML / DL</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Neural Networks</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-nlp"><span class="text-emerald-400 font-black text-xl">LLM / NLP</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Language Models</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-data"><span class="text-cyan-400 font-black text-xl">Data Science</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Analytics</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-genai"><span class="text-pink-500 font-black text-xl">Generative AI</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Intelligence</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-aws"><span class="text-orange-400 font-black text-xl">AWS</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Cloud Infrastructure</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-azure"><span class="text-blue-500 font-black text-xl">Azure</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Cloud Services</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-gcp"><span class="text-yellow-400 font-black text-xl">GCP</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Compute Engine</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-snowflake"><span class="text-sky-300 font-black text-xl">Snowflake</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Data Warehouse</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-sys"><span class="text-slate-200 font-black text-xl">Computer Systems</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Low-Level Dev</span></div>
+                        <div class="px-8 py-6 bg-slate-900 border border-white/10 rounded-3xl flex flex-col min-w-[220px] glow-robot"><span class="text-purple-400 font-black text-xl">SLAM / IoT</span><span class="text-slate-500 text-[10px] uppercase font-bold mt-1">Robotics & Sensing</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lab" class="max-w-7xl mx-auto px-6 py-24">
+            <h2 class="text-indigo-400 font-mono text-[10px] tracking-[0.4em] uppercase mb-8 text-center">Project Lab</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <div class="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/5 bento-card">
+                    <h3 class="text-3xl font-bold mb-8">Scope Your Project</h3>
+                    <div class="space-y-10">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-4">Select Domain</span>
+                            <div id="domain-buttons" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <button onclick="updatePrice(5000, 'Cloud', this)" class="px-4 py-3 rounded-xl border border-white/10 text-xs font-bold hover:bg-indigo-600 transition-all bg-indigo-600">Cloud</button>
+                                <button onclick="updatePrice(9500, 'AI Engine', this)" class="px-4 py-3 rounded-xl border border-white/10 text-xs font-bold hover:bg-indigo-600 transition-all">AI Engine</button>
+                                <button onclick="updatePrice(12000, 'Robotics', this)" class="px-4 py-3 rounded-xl border border-white/10 text-xs font-bold hover:bg-indigo-600 transition-all">Robotics</button>
+                                <button onclick="updatePrice(4500, 'Web App', this)" class="px-4 py-3 rounded-xl border border-white/10 text-xs font-bold hover:bg-indigo-600 transition-all">Web App</button>
+                                <button onclick="updatePrice(5500, 'Mobile App', this)" class="px-4 py-3 rounded-xl border border-white/10 text-xs font-bold hover:bg-indigo-600 transition-all">Mobile App</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-4">Complexity Scale</span>
+                            <input type="range" min="1" max="10" value="5" id="complexity" class="w-full accent-indigo-500" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 rounded-[2.5rem] bg-indigo-600/10 border border-indigo-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="text-6xl font-black mt-8" id="total-price">$12,500</div>
+                        <div class="flex flex-col mt-4">
+                            <span class="text-indigo-400 font-black text-xs uppercase tracking-widest">Estimate_Output</span>
+                            <span class="text-slate-400 text-sm font-medium mt-1 italic">Standard project deployment window: 4-12 weeks</span>
+                        </div>
+                    </div>
+                    <button onclick="initiateFlow()" class="w-full mt-10 bg-indigo-600 py-5 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-500/20">Initialize Workflow</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="py-12 border-t border-white/5 text-center text-slate-600 text-[10px] font-mono tracking-[0.5em] uppercase">
+        Kizuna Software Solutions © 2026
+    </footer>
+
+    <script>
+        let basePrice = 5000;
+        let selectedDomain = 'Cloud';
+
+        function updatePrice(val, domain, btn) {
+            basePrice = val;
+            selectedDomain = domain;
+            document.querySelectorAll('#domain-buttons button').forEach(b => b.classList.remove('bg-indigo-600'));
+            btn.classList.add('bg-indigo-600');
+            calculate();
+        }
+
+        function calculate() {
+            const comp = document.getElementById('complexity').value;
+            const total = basePrice * (comp * 0.3 + 1);
+            document.getElementById('total-price').innerText = '$' + total.toLocaleString();
+        }
+
+        function toggleModal() {
+            document.getElementById('modal-overlay').classList.toggle('active');
+        }
+
+        function initiateFlow() {
+            const comp = document.getElementById('complexity').value;
+            const price = document.getElementById('total-price').innerText;
+            document.getElementById('modal-domain').innerText = selectedDomain;
+            document.getElementById('modal-comp').innerText = comp;
+            document.getElementById('modal-price-display').innerText = price;
+            toggleModal();
+        }
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
